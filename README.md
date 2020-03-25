@@ -1,1 +1,1 @@
-# BeloteDeclarations-Crocodile
+Belote project 2020 
