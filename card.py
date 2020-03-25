@@ -12,22 +12,35 @@ class Card:
 	# Dunders
 
 	def __str__(self):
-		return self.number + self.suit
+		dictionary = {'hearts': u'\u2665', 'diamonds': u'\u2666', 'clubs': u'\u2663', 'spades': u'\u2660'}
+		
+		return self.number + dictionary[self.suit]
 	
 	def __repr__(self):
-		return self.number + self.suit
+		dictionary = {'hearts': u'\u2665', 'diamonds': u'\u2666', 'clubs': u'\u2663', 'spades': u'\u2660'}
+		
+		return self.number + dictionary[self.suit]
+
+	def __eq__(self, other):
+		return self.number == other.number and self.suit == other.suit
+
+	def __lt__(self, other):
+		dictionary = 	{'7' : 7, '8': 8, '9': 9, '10': 10,
+						'J': 11, 'Q': 12, 'K': 13, 'A':14}
+		
+		return dictionary[self.number] < dictionary[other.number]
 
 	# Static
 
 	@staticmethod
 	def validate_card(number, suit):
 		allowed_numbers = ['7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-		allowed_suits = ['h', 's', 'c', 'd']
+		allowed_suits = ['hearts', 'spades', 'clubs', 'diamonds']
 
 		if type(number) is not str:
-			raise Exception('Number must be of "str" type.')
+			raise TypeError('Number must be of "str" type.')
 		elif type(suit) is not str:
-			raise Exception('Suit must be of "str" type.')
+			raise TypeError('Suit must be of "str" type.')
 		elif number not in allowed_numbers:
 			raise Exception('Unrecognized number.')
 		elif suit not in allowed_suits:
