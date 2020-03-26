@@ -20,6 +20,18 @@ class Hand:
 	def get_number_of_cards_with_number(self, number):
 		return self.__numbers[number]
 
+	# TODO
+	# Къде да е тая ф-я? Защото май в Карти не е много подходящо? 
+	@staticmethod 
+	def sum_value_of_cards(cards):
+		value = 0
+
+		for card in cards:
+			value += int(card)
+
+		return value							
+
+
 	def __str__(self):
 		return ''.join(str(card) + ' ' for card in self.__cards) 
 
