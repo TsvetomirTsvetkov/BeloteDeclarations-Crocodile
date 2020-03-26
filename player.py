@@ -3,14 +3,17 @@ from hand import Hand
 class Player:
 	def __init__(self, player_name, team_name):
 		self.__name = player_name
-		self.__hand = []
+		# self.__hand = Hand([]) # инициализирам го като му се подадат карти?
 		self.__team = team_name # TODO // string? 
 
 	def get_name(self):
 		return self.__name
 
 	def get_team(self):
-		return self.__team		
+		return self.__team	
+
+	def get_cards(self):
+		return self.__hand.get_cards()		
 
 	def add_cards(self, cards):
 		if len(cards) == 8:
