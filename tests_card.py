@@ -70,8 +70,8 @@ class TestCardInit(unittest.TestCase):
 		test_suit = 'hearts'
 		test_obj = Card(test_number, test_suit)
 
-		self.assertEqual(getattr(test_obj, 'number'), '8')
-		self.assertEqual(getattr(test_obj, 'suit'), 'hearts')
+		self.assertEqual(test_obj.get_number(), '8')
+		self.assertEqual(test_obj.get_suit(), 'hearts')
 
 class TestCardStrDunder(unittest.TestCase):
 	def test_card_str_representation_is_as_expected(self):
