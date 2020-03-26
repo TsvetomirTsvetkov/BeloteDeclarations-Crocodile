@@ -40,3 +40,8 @@ class Deck:
 	def shuffle_deck(self):
 		random.shuffle(self.cards)
 
+	def hand_out(self):
+		hand = self.cards[0:8]
+		self.cards = self.cards[8:32] + hand
+		
+		return hand
