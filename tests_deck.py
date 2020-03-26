@@ -49,5 +49,15 @@ class TestDeckReprDunder(unittest.TestCase):
 
 		self.assertEqual(repr(test_obj), expected_result)
 
+class TestDeckHandOut(unittest.TestCase):
+	def test_deck_hand_out_returns_first_8_cards_from_top_of_deck_and_puts_them_in_the_back(self):
+		test_obj = Deck()
+		expected_result = getattr(test_obj, 'cards')[0:8]
+
+		handed_cards = test_obj.hand_out()
+
+		self.assertEqual(handed_cards, expected_result)
+		self.assertEqual(handed_cards, getattr(test_obj, 'cards')[24:32])
+
 if __name__ == '__main__':
 	unittest.main()
