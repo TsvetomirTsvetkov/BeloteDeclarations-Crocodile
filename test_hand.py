@@ -20,9 +20,10 @@ class TestHand(unittest.TestCase):
 		self.assertEqual(self.hand.get_number_of_cards_with_rank('A'), 2)
 	
 	def test_get_cards_with_specific_suit(self):
-		self.assertEqual(self.hand.get_cards_by_suit('hearts'), ['7', 'J', 'Q', 'K', 'A'])
-		self.assertEqual(self.hand.get_cards_by_suit('spades'), ['8', 'J'])
-		self.assertEqual(self.hand.get_cards_by_suit('diamonds'), ['A'])
+		self.assertEqual(self.hand.get_cards_by_suit('hearts'), [Card('7', 'hearts'), Card('J', 'hearts'), \
+			Card('Q', 'hearts'), Card('K', 'hearts'), Card('A', 'hearts')])
+		self.assertEqual(self.hand.get_cards_by_suit('spades'), [Card('8', 'spades'), Card('J','spades')])
+		self.assertEqual(self.hand.get_cards_by_suit('diamonds'), [Card('A', 'diamonds')])
 		self.assertEqual(self.hand.get_cards_by_suit('clubs'), [])
 
 	def test_init(self):
@@ -71,11 +72,11 @@ class TestHand(unittest.TestCase):
 
 		self.hand.remove_cards(cards_to_remove)
 
-		self.assertEqual(self.hand.get_cards_by_suit('hearts'), ['7', 'Q', 'K', 'A'])
-		self.assertEqual(self.hand.get_cards_by_suit('spades'), ['J'])
-		self.assertEqual(self.hand.get_cards_by_suit('diamonds'), ['A'])
-		self.assertEqual(self.hand.get_cards_by_suit('clubs'), [])	
-
+		self.assertEqual(self.hand.get_cards_by_suit('hearts'), [Card('7', 'hearts'), \
+			Card('Q', 'hearts'), Card('K', 'hearts'), Card('A', 'hearts')])
+		self.assertEqual(self.hand.get_cards_by_suit('spades'), [Card('J','spades')])
+		self.assertEqual(self.hand.get_cards_by_suit('diamonds'), [Card('A', 'diamonds')])
+		self.assertEqual(self.hand.get_cards_by_suit('clubs'), [])
 
 if __name__ == '__main__':
 	unittest.main()	

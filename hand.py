@@ -3,8 +3,8 @@ from card import Card
 class Hand:
 	def __init__(self, cards): # cards from type Card 
 		self.__cards = sorted(cards)
-		self.init_dictionaries()
-		self.update_dictionaries()
+		self.__init_dictionaries()
+		self.__update_dictionaries()
 
 	def get_cards(self):
 		return self.__cards	
@@ -15,14 +15,24 @@ class Hand:
 	def get_number_of_cards_with_rank(self, rank):
 		return self.__ranks[rank]
 
-	def init_dictionaries(self):
-		self.__ranks = {'7': 0, '8': 0, '9': 0, '10': 0, 'J': 0, 'Q': 0, 'K': 0, 'A': 0} # how many times we have the card
-		self.__suits = {'hearts': [], 'diamonds': [], 'clubs': [], 'spades': []} # hearts: list of card numbers of that suit
+	def __init_dictionaries(self):
+		self.__init_ranks()
+		self.__init_suits()
 
-	def update_dictionaries(self):
+	def __init_ranks(self):
+		self.__ranks = {}
+		for rank in Card.ranks: # how many times we have the card
+			self.__ranks[rank] = 0	
+
+	def __init_suits(self):
+		self.__suits = {}
+		for suit in Card.suits:  # hearts: list of card numbers of that suit
+			self.__suits[suit] = []
+
+	def __update_dictionaries(self):
 		for card in self.__cards:
-			self.__ranks[card.get_number()] += 1
-			self.__suits[card.get_suit()].append(card.get_number())
+			self.__ranks[card.get_rank()] += 1
+			self.__suits[card.get_suit()].append(card)
 
 	def remove_cards(self, cards_to_remove):
 		new_cards = []
@@ -32,8 +42,8 @@ class Hand:
 				new_cards.append(card)
 
 		self.__cards = new_cards		
-		self.init_dictionaries()
-		self.update_dictionaries()
+		self.__init_dictionaries()
+		self.__update_dictionaries()
 		
 	# TODO
 	# Къде да е тая ф-я? Защото май в Карти не е много подходящо? 
