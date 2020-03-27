@@ -1,28 +1,51 @@
 import unittest
 from card import Card
 from player import Player
+from hand import Hand
 
-class TestPlayer(unittest.TestCase):
-	def test_when_add_less_than_8_cards(self):
-		cards = [Card('7', 'hearts'), Card('8', 'spades'), Card('J', 'hearts'), Card('Q', 'hearts'), \
-		Card('A', 'hearts'), Card('K', 'hearts'), Card('J', 'spades')]
-		player = Player('Pesho', '1')
+class TestPlayerInit(unittest.TestCase):
+	def test_player_init_initializes_player_as_expected(self):
+		test_player = Player('Pesho')
 
-		with self.assertRaisesRegex(ValueError, 'You should add 8 cards.'):
-			player.add_cards(cards)
-		
-	def test_str_representation(self):
-		player = Player('Pesho', '1')
-		expected_result = 'Pesho is from team: 1'
+		self.assertEqual(test_player.get_name(), 'Pesho')
+		self.assertEqual(test_player._Player__hand, [])
+
+class TestPlayerStrDunder(unittest.TestCase):
+	def test_player_str_representation_is_as_expected(self):
+		test_player = Player('Pesho')
+		expected_result = 'Pesho'
 			
-		result = str(player)
+		result = str(test_player)
 
 		self.assertEqual(result, expected_result)
 
-	# TODO Declaration class
-	def test_declaration(self):
-		pass	
-	
+class TestPlayerReprDunder(unittest.TestCase):
+	def test_player_str_representation_is_as_expected(self):
+		test_player = Player('Pesho')
+		expected_result = 'Pesho'
+			
+		result = repr(test_player)
+
+		self.assertEqual(result, expected_result)
+
+class TestPlayerEqDunder(unittest.TestCase):
+	def test_player_eq_comparison_is_as_expected(self):
+		test_player1 = Player('Pesho')
+		test_player2 = Player('Pesho')
+		test_player3 = Player('Gosho')
+
+		self.assertEqual(test_player1, test_player2)
+		self.assertNotEqual(test_player2, test_player3)
+
+class TestPlayerAddCards(unittest.TestCase):
+	def test_player_add_cards_works_as_expected(self):
+		test_player = Player('Pesho')
+		test_hand = Hand([Card('7','hearts'), Card('7','spades'), Card('7','clubs'), Card('7','diamonds'),\
+		Card('8','hearts'), Card('8','spades'), Card('8','clubs'), Card('8','diamonds')])
+
+		test_player.add_cards(test_hand)
+
+		self.assertEqual(test_player._Player__hand, test_hand)
 
 if __name__ == '__main__':
 	unittest.main()
