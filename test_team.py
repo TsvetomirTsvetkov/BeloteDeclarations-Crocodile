@@ -1,40 +1,84 @@
+# test_team.py
+
 import unittest
 from player import Player
 from team import Team
 
-class TestTeam(unittest.TestCase):
-	def test_when_add_two_players_with_different_names_and_same_team_then_init_team(self):
-		p1 = Player('Pesho', 'Team1')
-		p2 = Player('Gesho', 'Team1')
-		team = Team('Team1')
+class TestTeamValidatePlayers(unittest.TestCase):
+	def test_team_validate_players_raises_exception_when_argument_not_list(self):
+		p1 = Player('Pesho')
+		p2 = Player('Gosho')
+		test_players = (p1, p2)
+		exc = None
+
+		try:
+			Team.validate_players(test_players)
+		except TypeError as err:
+			exc = err
+
+		self.assertIsNotNone(exc)
+		self.assertEqual(str(exc), 'Players must be of "list" type.')
+
+	def test_team_validate_players_raises_exception_when_not_two_players(self):
+		p1 = Player('Pesho')
+		p2 = Player('Gosho')
+		p3 = Player('Tosho')
+		test_players = [p1, p2, p3]
+		exc = None
+
+		try:
+			Team.validate_players(test_players)
+		except Exception as err:
+			exc = err
+
+		self.assertIsNotNone(exc)
+		self.assertEqual(str(exc), 'Only 2 players per team.')
+
+	def test_team_validate_players_raises_exception_when_elem_of_list_not_player_type(self):
+		p1 = Player('Pesho')
+		p2 = 'Gosho'
+		test_players = [p1, p2]
+		exc = None
+
+		try:
+			Team.validate_players(test_players)
+		except TypeError as err:
+			exc = err
+
+		self.assertIsNotNone(exc)
+		self.assertEqual(str(exc), 'Elements of list must be of "Player" type.')
+
+	def test_team_validate_players_raises_exception_when_players_have_the_same_name(self):
+		p1 = Player('Pesho')
+		p2 = Player('Pesho')
+		test_players = [p1, p2]
+		exc = None
+
+		try:
+			Team.validate_players(test_players)
+		except Exception as err:
+			exc = err
+
+		self.assertIsNotNone(exc)
+		self.assertEqual(str(exc), 'Cannot have players with the same name.')
+
+	def test_team_validate_players_passes_with_correct_input(self):
+		p1 = Player('Pesho')
+		p2 = Player('Gosho')
+		test_players = [p1, p2]
+
+		Team.validate_players(test_players)
+
+class TestTeamInit(unittest.TestCase):
+	def test_team_init_initialization_is_as_expected(self):
+		p1 = Player('Pesho')
+		p2 = Player('Gesho')
+		
+		team = Team('Team1',[p1, p2])
+		
 		expected_result = [p1, p2]
 
-		team.add_players(expected_result)
-
 		self.assertEqual(team.get_players(), expected_result)
-
-	def test_when_add_one_player_then_raise_error(self):
-		p1 = Player('Pesho', 'Team1')
-		team = Team('Team1')
-
-		with self.assertRaisesRegex(AssertionError, 'A team has 2 players.'):
-			team.add_players([p1])
-	
-	def test_when_add_two_players_with_different_names_and_teams_then_raise_error(self):
-		p1 = Player('Pesho', 'Team1')
-		p2 = Player('Gesho', 'Team2')
-		team = Team('Team1')
-
-		with self.assertRaisesRegex(AssertionError, 'Players are from different teams.'):
-			team.add_players([p1, p2])
-	
-	def test_when_add_two_players_with_equal_names_and_teams_then_raise_error(self):
-		p1 = Player('Pesho', 'Team1')
-		p2 = Player('Pesho', 'Team1')
-		team = Team('Team1')
-
-		with self.assertRaisesRegex(AssertionError, 'Players should have different names.'):
-			team.add_players([p1, p2])
 
 if __name__ == '__main__':
 	unittest.main()
