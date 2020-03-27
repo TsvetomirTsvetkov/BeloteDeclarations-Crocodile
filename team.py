@@ -1,18 +1,32 @@
-class Team:
-	def __init__(self, name):
-		self.__name = name
-		self.__players = []
+# team.py
 
+from player import Player
+
+class Team:
+	# Constructor
+
+	def __init__(self, name, players):
+		self.validate_players(players)
+		self.__name = name
+		self.__players = players
+
+	# Getters
+		
 	def get_name(self):
 		return self.__name
 
 	def get_players(self):
 		return self.__players		
 
-	def add_players(self, players):
-		assert len(players) == 2, 'A team has 2 players.'
-		assert players[0].get_team() == players[1].get_team(), 'Players are from different teams.'
-		# TODO - or to not have this and allow players with equal names? (but should have different cards(__eq__))
-		assert players[0].get_name() != players[1].get_name(), 'Players should have different names.'
+	# Static
 
-		self.__players = players
+	@staticmethod
+	def validate_players(players):
+		if type(players) is not list:
+			raise TypeError('Players must be of "list" type.')
+		elif len(players) != 2:
+			raise Exception('Only 2 players per team.')
+		elif type(players[0]) is not Player or type(players[1]) is not Player:
+			raise TypeError('Elements of list must be of "Player" type.')
+		elif players[0].get_name() == players[1].get_name():
+			raise Exception('Cannot have players with the same name.')
