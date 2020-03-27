@@ -17,7 +17,7 @@ class TestDeckInit(unittest.TestCase):
 			
 		test_obj = Deck()
 
-		self.assertEqual(getattr(test_obj,'cards'), expected_result)
+		self.assertEqual(test_obj._Deck__cards, expected_result)
 
 class TestDeckStrDunder(unittest.TestCase):
 	def test_deck_str_representation_is_as_expected(self):
@@ -29,7 +29,7 @@ class TestDeckStrDunder(unittest.TestCase):
 							'Q'+ u'\u2665 '+'Q'+ u'\u2666 '+'Q'+ u'\u2663 '+'Q'+ u'\u2660 '+\
 							'K'+ u'\u2665 '+'K'+ u'\u2666 '+'K'+ u'\u2663 '+'K'+ u'\u2660 '+\
 							'A'+ u'\u2665 '+'A'+ u'\u2666 '+'A'+ u'\u2663 '+'A'+ u'\u2660'
-		
+			
 		test_obj = Deck()
 
 		self.assertEqual(str(test_obj), expected_result)
@@ -52,12 +52,12 @@ class TestDeckReprDunder(unittest.TestCase):
 class TestDeckHandOut(unittest.TestCase):
 	def test_deck_hand_out_returns_first_8_cards_from_top_of_deck_and_puts_them_in_the_back(self):
 		test_obj = Deck()
-		expected_result = getattr(test_obj, 'cards')[0:8]
+		expected_result = test_obj._Deck__cards[0:8]
 
 		handed_cards = test_obj.hand_out()
 
 		self.assertEqual(handed_cards, expected_result)
-		self.assertEqual(handed_cards, getattr(test_obj, 'cards')[24:32])
+		self.assertEqual(handed_cards, test_obj._Deck__cards[24:32])
 
 if __name__ == '__main__':
 	unittest.main()
