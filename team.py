@@ -10,6 +10,11 @@ class Team:
 		self.__name = name
 		self.__players = players
 
+	# Dunders
+
+	def __getitem__(self, key):
+		return self.__players[key]
+
 	# Getters
 		
 	def get_name(self):
