@@ -1,16 +1,19 @@
 # belote.py
 
 from game import Game
+from player import Player
+from team import Team
 from utils import team_players, validate_teams, validate_player_names
+
 
 def main():
 	team1_name = input('Team 1 name: ')
 	team2_name = input('Team 2 name: ')
 
-	validate_teams(team1, team2)									# Checks if teams have the same name
+	validate_teams(team1_name, team2_name)									# Checks if teams have the same name
 
-	input_players_team1 = input(f'"{team1}" players: ')		
-	input_players_team2 = input(f'"{team2}" players: ')
+	input_players_team1 = input(f'"{team1_name}" players: ')		
+	input_players_team2 = input(f'"{team2_name}" players: ')
 
 	list_players_team1 = team_players(input_players_team1)			# Converts input to list of strings with names
 	list_players_team2 = team_players(input_players_team2)			# Converts input to list of strings with names
