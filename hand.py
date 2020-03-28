@@ -1,4 +1,14 @@
 from card import Card
+'''
+class Cards(cards):
+	def __init__(self, cards):
+		self.__cards = cards
+
+	def __getitem__(self, index):
+		return self.__cards[index]
+
+	def _		
+'''
 
 class Hand:
 	def __init__(self, cards): # cards from type Card 
