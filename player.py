@@ -1,6 +1,7 @@
 # player.py
 
 from hand import Hand
+from declarations import Declarations
 
 class Player:
 	# Constructor
@@ -36,4 +37,4 @@ class Player:
 		self.__hand = Hand(cards)
 
 	def get_declarations(self):
-		return Declaration(self.__hand).get_declarations()
+		return Declarations(self.__hand).get_declarations()

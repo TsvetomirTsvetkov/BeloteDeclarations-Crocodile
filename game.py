@@ -181,7 +181,7 @@ class Game:
 				round_points_team1 = points.get_team2_score()									# Used for representation in results.txt
 				round_points_team2 = points.get_team1_score()
 				switch = True
-
+				
 			self.__write_team_scores(current_round, round_points_team1, round_points_team2)
 
 			# TODO: Json
