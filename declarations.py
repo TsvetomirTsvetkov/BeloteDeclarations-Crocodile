@@ -1,11 +1,7 @@
-declarations = {'belote': 20, 'tierce': 20, 'quarte': 50, \
-'quinte': 100, 'carre': 100, 'carre9': 150, 'carreJ': 200 }
-
 import copy 
 from card import Card
-from hand import Hand 
 
-class Declarations: # declaration: cards, forming it
+class Declarations: # declaration: cards that form it
 	def __init__(self, hand):
 		self.__hand = copy.copy(hand) # TODO копие ли да е?
 		self.__declarations = {'belote': [], 'carreJ': [], 'carre9': [], 'carre': [], \
@@ -21,9 +17,7 @@ class Declarations: # declaration: cards, forming it
 	def __add_declarations(self):
 		self.__add_belote()
 		self.__add_carre()
-		#self.__add_quinte()
-		#self.__add_quarte()
-		#self.__add_tierce()
+		self.__add_consecutive_cards()
 
 	def __add_belote(self):
 		for suit in Card.suits:
@@ -34,40 +28,62 @@ class Declarations: # declaration: cards, forming it
 				self.__declarations['belote'].append((queen, king))
 
 	def __add_carre(self):
-		self.__declarations['carreJ'] = []
-		self.__declarations['carre9'] = []
-		self.__declarations['carre'] = []
-
 		for rank in Card.ranks:
 			if self.__hand.get_number_of_cards_with_rank(rank) == 4:
-				cards = [Card(rank, suit) for suit in Card.suits]
+				carre_cards = [Card(rank, suit) for suit in Card.suits]
 
-				self.__hand.remove_cards(cards)
+				self.__hand.remove_cards(carre_cards)
 
 				if rank == 'J':
-					self.__declarations['carreJ'] = [tuple(cards)]
+					self.__declarations['carreJ'] = [tuple(carre_cards)]
 				elif rank == '9':
-					self.__declarations['carre9'] = [tuple(cards)]
+					self.__declarations['carre9'] = [tuple(carre_cards)]
 				else:
-					self.__declarations['carre'].append(tuple(cards)) #TODO test 2x carre
+					self.__declarations['carre'].append(tuple(carre_cards)) #TODO test 2x carre
 
-	def __add_quinte(self):
-		self.__declarations['quinte'] = []
-		cards = []
+	def __add_consecutive_cards(self):
+		declaration_types = {'quinte': 5, 'quarte': 4, 'tierce': 3}
 
-		try:
-			self.__declarations['quinte'] = [tuple(card for card in self.__get_consecutive_cards(5))]
-		except:
-			pass	
+		for decl_type in declaration_types:
+			for suit in Card.suits:
+				try:
+					new_declaration_cards = self.get_consecutive_cards(self.__hand, suit, declaration_types[decl_type])
 
-	def __get_consecutive_cards(self, times):
-		cards = self.__hand.get_cards_by_suit(suit)
-		
-		assert len(cards) < times
+					if new_declaration_cards:
+						self.__declarations[decl_type].append(tuple(new_declaration_cards))
+						self.__hand.remove_cards(new_declaration_cards)
+
+				except AssertionError:
+					pass
+
+	@staticmethod
+	def get_consecutive_cards(hand, suit, times):
+		my_cards = sorted(hand.get_cards_by_suit(suit), reverse=True)
+		assert len(my_cards) >= times
+
+		all_cards = sorted([Card(rank, suit) for rank in Card.ranks], reverse=True)
+
+		for i in range(0, len(all_cards) - times + 1):
+			possible_sequence = [card for card in all_cards[i : i + times]]
+
+			for j in range(0, len(my_cards) - times + 1):
+				my_sequence = my_cards[j : j + times]
+
+				if possible_sequence == my_sequence:
+					return my_sequence
+		return None						
 		
 	def __str__(self):
-		pass	
-				
+		return self.__str_representation()
+	
+	def __repr__(self):
+		return self.__str_representation()
 
+	def __str_representation(self):
+		str_result = ''
 
+		for declaration in self.__declarations.keys():
+			if self.__declarations[declaration] != []:
+				str_result += declaration + ': ' + str(self.__declarations[declaration]) + ', '
 		
+		return str_result
