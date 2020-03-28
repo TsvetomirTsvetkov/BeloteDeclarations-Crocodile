@@ -4,6 +4,7 @@ from player import Player
 from declarations import Declarations
 
 class ScoreSystem:
+	
 	# Constructor
 
 	def __init__(self, players, game_type):
@@ -12,12 +13,12 @@ class ScoreSystem:
 
 		if game_type != 'no trumps':
 			self.__team1_declarations = self.get_team_declarations([players[0], players[2]])
-			self.__team2_declarations = self.get_team_declarations([players[1], players[2]])
+			self.__team2_declarations = self.get_team_declarations([players[1], players[3]])
 
 			if game_type in ['clubs', 'diamonds', 'hearts', 'spades']:
 				self.__remove_unecessary_belotes(game_type)
 
-			self.__remove_weaker_declarations()
+			self.__remove_weaker_declarations()		
 
 	# Public
 
@@ -36,7 +37,7 @@ class ScoreSystem:
 
 		for declaration_type in team_declarations.keys(): # belote, carre, tierce ..
 			for declaration in team_declarations[declaration_type]:
-				if declaration: # != []
+				if declaration:
 					score += declarations_points[declaration_type]
 
 		return score			
@@ -49,7 +50,7 @@ class ScoreSystem:
 	def __remove_weaker_declarations(self):
 		team1_highest_sequence_of_cards = self.__get_higher_declaration(self.__team1_declarations)
 		team2_highest_sequence_of_cards = self.__get_higher_declaration(self.__team2_declarations) 
-
+		
 		if team1_highest_sequence_of_cards and team2_highest_sequence_of_cards:
 			if len(team1_highest_sequence_of_cards) > len(team2_highest_sequence_of_cards):
 				self.__remove_sequence_declarations('team2')
