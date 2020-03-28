@@ -79,6 +79,15 @@ class TestTeamGetitemDunder(unittest.TestCase):
 		self.assertEqual(team[0], p1)
 		self.assertEqual(team[1], p2)
 
+class TestTeamStrDunder(unittest.TestCase):
+	def test_team_str_representation_is_as_expected(self):
+		p1 = Player('Pesho')
+		p2 = Player('Gesho')
+		
+		test_team = Team('Team1',[p1, p2])
+
+		self.assertEqual(str(team), 'Team1')
+
 class TestTeamInit(unittest.TestCase):
 	def test_team_init_initialization_is_as_expected(self):
 		p1 = Player('Pesho')

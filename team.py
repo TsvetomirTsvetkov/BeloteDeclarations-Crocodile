@@ -15,6 +15,9 @@ class Team:
 	def __getitem__(self, key):
 		return self.__players[key]
 
+	def __str__(self):
+		return self.__name
+
 	# Getters
 		
 	def get_name(self):
