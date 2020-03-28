@@ -5,6 +5,7 @@ from deck import Deck
 from random import randint
 from team import Team
 from score_system import ScoreSystem
+import json
 
 class Game:
 	# Constructor
@@ -158,13 +159,15 @@ class Game:
 	# Public
 
 	def play(self):
-
 		self.__write_team_names()
+
+		self.__team1_score = 0
+		self.__team2_score = 0
+
+		switch = True
+		current_round = 1																		# Used for representation in json
 		
 		while self.__team1_score <= 150 and self.__team2_score <= 150:
-			switch = True
-			current_round = 1																	# Used for representation in json
-
 			self.__deck.shuffle_deck()															# Shuffle Deck
 
 			self.__give_cards()																	# Players get their hands
@@ -181,7 +184,7 @@ class Game:
 				round_points_team1 = points.get_team2_score()									# Used for representation in results.txt
 				round_points_team2 = points.get_team1_score()
 				switch = True
-				
+
 			self.__write_team_scores(current_round, round_points_team1, round_points_team2)
 
 			# TODO: Json
