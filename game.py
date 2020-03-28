@@ -76,13 +76,13 @@ class Game:
 	def __write_team_scores(self, current_round, round_points_team1, round_points_team2):
 		with open("results.txt", 'a+') as f:
 			if current_round == 1:
-				f.write(str(self.__team1_score))
-				text_length_until_score2 = (self.__calculate_text_length() // 2 ) - len(str(self.__team1_score))
+				f.write(str(self.__team1_score + round_points_team1))
+				text_length_until_score2 = (self.__calculate_text_length() // 2 ) - len(str(self.__team1_score + round_points_team1))
 				
 				for number in range(0, text_length_until_score2):
 					f.write(' ')
 				f.write('| ')
-				f.write(str(self.__team2_score) + '\n')
+				f.write(str(self.__team2_score + round_points_team2) + '\n')
 			else:
 				score1 = str(self.__team1_score) + ' + ' + str(round_points_team1)
 				f.write(score1)
