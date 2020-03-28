@@ -4,6 +4,7 @@ from player import Player
 from deck import Deck
 from random import randint
 from team import Team
+from score_system import ScoreSystem
 
 class Game:
 	# Constructor
@@ -35,6 +36,102 @@ class Game:
 
 		return contracts[randint(0, 5)]
 
+	def __get_team_declarations(self):
+		pass 
+
+	# Helpers for writing in results.txt
+
+	def __calculate_text_length(self):														# Helps with formatting text in results.txt
+		return 2 * max(len(self.__team1.get_name()), len(self.__team2.get_name())) + 12
+	
+	def __write_team_names(self):																
+		gap = '   '
+		team1_name = self.__team1.get_name()
+		team2_name = self.__team2.get_name()
+
+		shift = (max(len(team1_name), len(team2_name)) - min(len(team1_name), len(team2_name))) // 2
+		helper = gap
+		
+		for index in range(0, shift):
+			helper += ' '
+
+		if len(team1_name) > len(team2_name):
+			line = gap + team1_name + gap + '|' + helper + team2_name + helper + '\n'
+		elif len(team1_name) < len(team2_name):
+			line = helper + team1_name + helper + '|' + gap + team2_name + gap + '\n'
+		else:	
+			line = gap + team1_name + gap + '|' + gap + team2_name + gap + '\n'
+		
+		length_of_frame = self.__calculate_text_length()
+		
+		with open("results.txt", 'a+') as f:
+			f.write(line)
+
+			for index in range(0, length_of_frame):
+				f.write('=')
+			
+			f.write('\n')
+
+	def __write_team_scores(self, current_round, round_points_team1, round_points_team2):
+		with open("results.txt", 'a+') as f:
+			if current_round == 1:
+				f.write(str(self.__team1_score))
+				text_length_until_score2 = (self.__calculate_text_length() // 2 ) - len(str(self.__team1_score))
+				
+				for number in range(0, text_length_until_score2):
+					f.write(' ')
+				f.write('| ')
+				f.write(str(self.__team2_score) + '\n')
+			else:
+				score1 = str(self.__team1_score) + ' + ' + str(round_points_team1)
+				f.write(score1)
+				text_length_until_score2 = (self.__calculate_text_length() // 2 ) - len(score1)
+
+				for number in range(0, text_length_until_score2):
+					f.write(' ')
+				f.write('| ')
+				f.write(str(self.__team2_score) + ' + ' + str(round_points_team2) + '\n')
+
+			if self.__team1_score + round_points_team1 > 150 or self.__team2_score + round_points_team2 > 150:
+				f.write(str(self.__team1_score + round_points_team1))
+				text_length_until_score2 = (self.__calculate_text_length() // 2 ) - len(str(self.__team1_score + round_points_team1))
+				
+				for number in range(0, text_length_until_score2):
+					f.write(' ')
+				f.write('| ')
+				f.write(str(self.__team2_score + round_points_team2) + '\n')
+
+				if self.__team1_score + round_points_team1 > 150:
+					team1_final_score = 1
+					team2_final_score = 0
+				else:
+					team1_final_score = 0
+					team2_final_score = 1
+				
+				full_length = self.__calculate_text_length()
+				
+				for number in range(0, full_length):
+					f.write('=')
+				f.write('\n')
+
+				for number in range(0, full_length // 4 - 1):
+						f.write(' ')
+
+				f.write(f'({team1_final_score})')
+
+				for number in range(0, full_length // 4 - 2):
+						f.write(' ')
+				f.write('|')
+
+				for number in range(0, full_length // 4 - 2):
+						f.write(' ')
+
+				f.write(f'({team2_final_score})\n')
+
+				for number in range(0, full_length):
+					f.write('=')
+				f.write('\n\n\n\n')
+
 	# Getters
 
 	def get_p1_team1(self):
@@ -61,39 +158,39 @@ class Game:
 	# Public
 
 	def play(self):
-		with open("results.txt", 'w') as f:
-			f.write(f'	{self.__team1.get_name()}	|	{self.__team2.get_name()	}\n')
-			f.write('=================================\n')
-			
-			# TODO: while points < 150
-			
-			round_points_team1 = 0					# Used for representation in results.txt
-			round_points_team2 = 0
-			current_round = 1						# Used for representation in json
 
-			self.__deck.shuffle_deck()				# Shuffle Deck
+		self.__write_team_names()
+		
+		while self.__team1_score <= 150 and self.__team2_score <= 150:
+			switch = True
+			current_round = 1																	# Used for representation in json
 
-			game_type = self.__contract()			# Type of Game
+			self.__deck.shuffle_deck()															# Shuffle Deck
 
-			self.__give_cards()						# Players get their hands
+			self.__give_cards()																	# Players get their hands
+
+			game_type = self.__contract()														# Type of Game
 			
-			for elem in self.__player_order:		# Every player calls what he / she has
-				# TODO:
-				# Declarations
-				# Points
-				pass
+			points = ScoreSystem(self.__player_order, game_type)
 			
-			self.__rotate_players()					# Rotation for next round
-
-			# Това може би трябва да се форматира по някакъв начин (същото важи и за горните write-ове)
-			if current_round == 1:
-				f.write(f'{self.__team1_score}				|	{self.__team2_score}')
+			if switch == True:
+				round_points_team1 = points.get_team1_score()									# Used for representation in results.txt
+				round_points_team2 = points.get_team2_score()
+				switch = False
 			else:
-				f.write(f'{self.__team1_score} + {round_points_team1}			|	{self.__team2_score} + {round_points_team2}')
+				round_points_team1 = points.get_team2_score()									# Used for representation in results.txt
+				round_points_team2 = points.get_team1_score()
+				switch = True
 
-			if self.__team1_score > 150:
-				return self.__p1_team1.get_team()
-			elif self.__team2_score > 150:
-				return self.__p3_team2.get_team()
+			self.__write_team_scores(current_round, round_points_team1, round_points_team2)
 
-			current_round += 1
+			# TODO: Json
+
+			self.__team1_score += round_points_team1
+			self.__team2_score += round_points_team2
+
+			self.__rotate_players()																# Rotation for next round
+
+			current_round += 1																	# Handling rounds
+
+		return self.__team1 if self.__team1_score > self.__team2_score  else self.__team2 
