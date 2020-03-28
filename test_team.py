@@ -69,6 +69,16 @@ class TestTeamValidatePlayers(unittest.TestCase):
 
 		Team.validate_players(test_players)
 
+class TestTeamGetitemDunder(unittest.TestCase):
+	def test_team_getitem_works_as_expected(self):
+		p1 = Player('Pesho')
+		p2 = Player('Gesho')
+		
+		team = Team('Team1',[p1, p2])
+
+		self.assertEqual(team[0], p1)
+		self.assertEqual(team[1], p2)
+
 class TestTeamInit(unittest.TestCase):
 	def test_team_init_initialization_is_as_expected(self):
 		p1 = Player('Pesho')
