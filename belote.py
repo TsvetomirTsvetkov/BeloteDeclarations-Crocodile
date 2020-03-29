@@ -5,7 +5,6 @@ from player import Player
 from team import Team
 from utils import team_players, validate_teams, validate_player_names
 
-
 def main():
 	team1_name = input('Team 1 name: ')
 	team2_name = input('Team 2 name: ')

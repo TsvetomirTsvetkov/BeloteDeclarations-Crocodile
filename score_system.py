@@ -4,7 +4,6 @@ from player import Player
 from declarations import Declarations
 
 class ScoreSystem:
-	
 	# Constructor
 
 	def __init__(self, players, game_type):
@@ -27,6 +26,24 @@ class ScoreSystem:
 
 	def get_team2_score(self):
 		return self.__get_score(self.__team2_declarations)
+
+	def get_team1_declarations(self): # TODO make into 1 function
+		result = []
+
+		for key in self.__team1_declarations.keys():
+			if self.__team1_declarations[key] != []:
+				result.append(str(key))
+		
+		return result
+
+	def get_team2_declarations(self):
+		result = []
+
+		for key in self.__team2_declarations.keys():
+			if self.__team2_declarations[key] != []:
+				result.append(str(key))
+		
+		return result	
 
 	# Private
 

@@ -3,7 +3,7 @@ from card import Card
 
 class Declarations: # declaration: cards that form it
 	def __init__(self, hand):
-		self.__hand = copy.copy(hand) # TODO копие ли да е?
+		self.__hand = copy.copy(hand)
 		self.__declarations = {'belote': [], 'carreJ': [], 'carre9': [], 'carre': [], \
 								 'quinte': [], 'quarte': [], 'tierce': []}
 		self.__add_declarations()

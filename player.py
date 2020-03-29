@@ -10,10 +10,21 @@ class Player:
 		self.__name = player_name
 		self.__hand = []
 
-	# Private:
+	# Getters
 
-	def __string_repr(self): 
+	def get_name(self):
 		return self.__name
+
+	def get_hand(self):
+		return self.__hand.get_cards()
+	
+	# Public
+
+	def add_cards(self, cards):
+		self.__hand = Hand(cards)
+
+	def get_declarations(self):
+		return Declarations(self.__hand).get_declarations()
 
 	# Dunders
 
@@ -26,15 +37,7 @@ class Player:
 	def __eq__(self, other):
 		return self.__name == other.__name
 
-	# Getters
+	# Private:
 
-	def get_name(self):
+	def __string_repr(self): 
 		return self.__name
-
-	# Public
-
-	def add_cards(self, cards):
-		self.__hand = Hand(cards)
-
-	def get_declarations(self):
-		return Declarations(self.__hand).get_declarations()
