@@ -35,4 +35,4 @@ Our solution
 
 **Flowchart**
 
-<img src ="images/flowchart.png" width="288">
+<img src ="images/flowchart.png">
