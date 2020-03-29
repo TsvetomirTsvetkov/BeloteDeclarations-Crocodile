@@ -29,3 +29,10 @@ The task
 - After each round, the points from the current round should be written into the results.txt file.
 
 - After each round, the cards and the announcements of each player should be written in data.json file.
+
+Our solution
+------------
+
+**Flowchart**
+
+<img src ="images/flowchart.png" width="288">
