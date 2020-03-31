@@ -7,6 +7,11 @@ from team import Team
 from score_system import ScoreSystem
 import json
 
+def set_default(obj):
+	if isinstance(obj, set):
+		return list(obj)
+	raise TypeError
+
 class Game:
 	# Constructor
 
@@ -16,6 +21,9 @@ class Game:
 
 		self.__team1_score = 0
 		self.__team2_score = 0
+
+		self.__team1_wins = 0
+		self.__team2_wins = 0
 
 		self.__player_order = [self.__team1[0], self.__team2[0], self.__team1[1], self.__team2[1]]
 
@@ -37,7 +45,10 @@ class Game:
 	def __contract(self):
 		contracts = ['clubs', 'diamonds', 'hearts', 'spades', 'no trumps', 'all trumps']	# Random contract
 
-		return contracts[randint(0, len(contracts) - 1)]
+		return contracts[randint(0, 5)]
+
+	def __get_team_declarations(self):
+		pass 
 
 	# Helpers for writing in results.txt
 
@@ -102,11 +113,9 @@ class Game:
 				f.write(str(self.__team2_score + round_points_team2) + '\n')
 
 				if self.__team1_score + round_points_team1 > 150:
-					team1_final_score = 1
-					team2_final_score = 0
+					self.__team1_wins += 1
 				else:
-					team1_final_score = 0
-					team2_final_score = 1
+					self.__team2_wins += 1
 				
 				full_length = self.__calculate_text_length()
 				
@@ -117,7 +126,7 @@ class Game:
 				for number in range(0, full_length // 4 - 1):
 						f.write(' ')
 
-				f.write(f'({team1_final_score})')
+				f.write(f'({self.__team1_wins})')
 
 				for number in range(0, full_length // 4 - 2):
 						f.write(' ')
@@ -126,41 +135,61 @@ class Game:
 				for number in range(0, full_length // 4 - 2):
 						f.write(' ')
 
-				f.write(f'({team2_final_score})\n')
+				f.write(f'({self.__team2_wins})\n')
 
 				for number in range(0, full_length):
 					f.write('=')
 				f.write('\n\n\n\n')
 
-	# Helpers for writing in data.json
-	
-	def __round_to_json(self, curr_round, round_points_team1, round_points_team2, declarations_team1, declarations_team2, game_type):
-		round_dict = {f'Round {curr_round}':
+	def __round_to_json(self, curr_round, round_points_team1, round_points_team2, score_system, game_type):
+		round_dict = {f'round {curr_round}':
 							{
-								"Game type": game_type,
+								"game type": game_type,
 								str(self.__team1):
-									{self.__team1.get_players()[0].get_name(): 
-										{"Cards": str(self.__team1.get_players()[0].get_hand())},
-									self.__team1.get_players()[1].get_name(): 
-										{"Cards": str(self.__team1.get_players()[1].get_hand())},
-									"Declarations": declarations_team1, 
-									"Points": round_points_team1},
+										{self.__team1.get_players()[0].get_name(): 
+											{"cards":str(self.__team1.get_players()[0].get_hand())},
+										self.__team1.get_players()[1].get_name(): 
+											{"cards":str(self.__team1.get_players()[1].get_hand())},
+										"declarations":score_system.get_team1_declarations(), 
+										"points":round_points_team1},
 								str(self.__team2):
-									{self.__team2.get_players()[0].get_name(): 
-										{"Cards": str(self.__team2.get_players()[0].get_hand())},
-									self.__team2.get_players()[1].get_name(): 
-										{"Cards": str(self.__team2.get_players()[1].get_hand())},
-									"Declarations": declarations_team2, 
-									"Points": round_points_team2}
+										{self.__team2.get_players()[0].get_name(): 
+											{"cards":str(self.__team2.get_players()[0].get_hand())},
+										self.__team2.get_players()[1].get_name(): 
+											{"cards":str(self.__team2.get_players()[1].get_hand())},
+										"declarations":score_system.get_team2_declarations(), 
+										"points":round_points_team2}
 							}
 					}
-
 		return round_dict
 
 	def __save_to_json(self, games_played, round_dictionaries):
 		with open('data.json', 'a+') as f:														# Handling .json
-			json_data = json.dumps({f"Game{self.__games_played}":round_dictionaries}, indent=4)
-			f.write(json_data)			
+			json_data = json.dumps({f"game{self.__games_played}":round_dictionaries}, indent=4)
+			f.write(json_data)
+
+	# Getters
+
+	def get_p1_team1(self):
+		return self.__team1[0]
+	
+	def get_p2_team1(self):
+		return self.__team1[1]
+	
+	def get_p1_team2(self):
+		return self.__team2[0]
+	
+	def get_p2_team2(self):
+		return self.__team2[1]
+
+	def get_team1_score(self):
+		return self.__team1_score
+	
+	def get_team2_score(self):
+		return self.__team2_score
+
+	def get_player_order(self):
+		return self.__player_order
 
 	# Public
 
@@ -170,7 +199,7 @@ class Game:
 		self.__team1_score = 0
 		self.__team2_score = 0
 
-		is_first_player_from_team1 = True # is the first player in player_order from Team1
+		switch = True
 		current_round = 1																				# Used for representation in json
 		round_dictionaries = []
 		
@@ -183,24 +212,20 @@ class Game:
 			
 			score_system = ScoreSystem(self.__player_order, game_type)
 			
-			if is_first_player_from_team1 == True:
+			if switch == True:
 				round_points_team1 = score_system.get_team1_score()										# Used for representation in results.txt
 				round_points_team2 = score_system.get_team2_score()
-				declarations_team1 = score_system.get_team1_declarations()
-				declarations_team2 = score_system.get_team2_declarations()
-				is_first_player_from_team1 = False
+				switch = False
 			else:
 				round_points_team1 = score_system.get_team2_score()										# Used for representation in results.txt
 				round_points_team2 = score_system.get_team1_score()
-				declarations_team1 = score_system.get_team2_declarations()
-				declarations_team2 = score_system.get_team1_declarations()
-				is_first_player_from_team1 = True
+				switch = True
 
 			self.__write_team_scores(current_round, round_points_team1, round_points_team2)
 
 			round_dictionaries.append(self.__round_to_json(	current_round, round_points_team1,\
-															round_points_team2, declarations_team1,\
-															declarations_team2, game_type))									# Saving to .json
+															round_points_team2, score_system,\
+															game_type))									# Saving to .json
 
 			self.__team1_score += round_points_team1
 			self.__team2_score += round_points_team2
@@ -213,4 +238,5 @@ class Game:
 
 		self.__save_to_json(self.__games_played, round_dictionaries)
 
-		return self.__team1 if self.__team1_score > self.__team2_score  else self.__team2
+
+		return self.__team1 if self.__team1_score > self.__team2_score  else self.__team2 
